@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<config>
+    <modules>
+        <Elgentos_AutoInvoice>
+            <version>0.1.0</version>
+        </Elgentos_AutoInvoice>
+    </modules>
+    <global>
+        <models>
+            <autoinvoice>
+                <class>Elgentos_AutoInvoice_Model</class>
+                <resourceModel>elgentos_alpak_resource</resourceModel>
+            </autoinvoice>
+            <autoinvoice_resource>
+                <class>Elgentos_AutoInvoice_Model_Resource</class>
+            </autoinvoice_resource>
+        </models>
+        <blocks>
+            <autoinvoice>
+                <class>Elgentos_AutoInvoice_Block</class>
+            </autoinvoice>
+        </blocks>
+        <helpers>
+            <autoinvoice>
+                <class>Elgentos_AutoInvoice_Helper</class>
+            </autoinvoice>
+        </helpers>
+        <events>
+            <sales_order_place_after>
+                <observers>
+                    <autoinvoice_sales_order_place_after>
+                        <type>singleton</type>
+                        <class>Elgentos_AutoInvoice_Model_Sales_Order_Observer</class>
+                        <method>place_after</method>
+                    </autoinvoice_sales_order_place_after>
+                </observers>
+            </sales_order_place_after>
+        </events>
+    </global>
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <autoinvoice translate="title" module="autoinvoice">
+                                            <title>Auto invoice</title>
+                                        </autoinvoice>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                        <autoinvoice>
+                            <title>Auto invoice</title>
+                            <children>
+                                <settings>
+                                    <title>Auto invoice</title>
+                                </settings>
+                            </children>
+                        </autoinvoice>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>
