@@ -31,10 +31,19 @@
                     <autoinvoice_sales_order_place_after>
                         <type>singleton</type>
                         <class>Elgentos_AutoInvoice_Model_Sales_Order_Observer</class>
-                        <method>place_after</method>
+                        <method>salesOrderPlaceAfter</method>
                     </autoinvoice_sales_order_place_after>
                 </observers>
             </sales_order_place_after>
+            <sales_order_payment_pay>
+                <observers>
+                    <autoinvoice_sales_order_place_after>
+                        <type>singleton</type>
+                        <class>Elgentos_AutoInvoice_Model_Sales_Order_Observer</class>
+                        <method>salesOrderPaymentPay</method>
+                    </autoinvoice_sales_order_place_after>
+                </observers>
+            </sales_order_payment_pay>
         </events>
     </global>
     <adminhtml>
@@ -66,4 +75,14 @@
             </resources>
         </acl>
     </adminhtml>
+    <default>
+        <autoinvoice>
+            <general>
+                <auto_invoice>1</auto_invoice>
+                <auto_shipment>1</auto_shipment>
+                <trigger_sales_order_place_after>1</trigger_sales_order_place_after>
+                <trigger_sales_order_payment_pay>1</trigger_sales_order_payment_pay>
+            </general>
+        </autoinvoice>
+    </default>
 </config>

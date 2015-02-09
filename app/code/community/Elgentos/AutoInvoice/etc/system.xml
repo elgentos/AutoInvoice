@@ -33,6 +33,44 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </conditions_to_process>
+                        <auto_invoice>
+                            <label>Auto create invoice</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </auto_invoice>
+                        <auto_shipment>
+                            <label>Auto create shipment</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </auto_shipment>
+                        <trigger_sales_order_place_after>
+                            <label>Check on placing sale</label>
+                            <comment>sales_order_place_after</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </trigger_sales_order_place_after>
+                        <trigger_sales_order_payment_pay>
+                            <label>Check on payment paid</label>
+                            <comment>sales_order_payment_pay</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>01</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </trigger_sales_order_payment_pay>
                     </fields>
                 </general>
             </groups>
