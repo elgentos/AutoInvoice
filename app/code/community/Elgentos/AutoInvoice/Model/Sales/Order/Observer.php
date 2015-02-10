@@ -4,20 +4,22 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
 
     public function salesOrderPlaceAfter($observer) {
         $order = $observer->getOrder();
-        if(Mage::getStoreConfig('trigger_sales_order_place_after', $order->getStoreId())) {
-            $this->autoInvoice($observer);
+        if(Mage::getStoreConfig('autoinvoice/general/trigger_sales_order_place_after', $order->getStoreId())) {
+            $this->autoInvoice($order);
         }
     }
 
     public function salesOrderPaymentPay($observer) {
-        $order = $observer->getOrder();
-        if(Mage::getStoreConfig('trigger_sales_order_payment_pay', $order->getStoreId())) {
-            $this->autoInvoice($observer);
+        $order = $observer->getPayment()->getOrder();
+        if(Mage::getStoreConfig('autoinvoice/general/trigger_sales_order_payment_pay', $order->getStoreId())) {
+               $this->autoInvoice($order);
         }
     }
 
-    public function autoInvoice($observer) {
-        $order = $observer->getOrder();
+    public function autoInvoice($order) {
+        if(!$order instanceof Mage_Sales_Model_Order) {
+	    $order = $observer->getOrder();
+	}
         $processConditions = unserialize(Mage::getStoreConfig('autoinvoice/general/conditions_to_process'));
 
         $state = $order->getState();

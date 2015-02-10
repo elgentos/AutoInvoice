@@ -37,11 +37,11 @@
             </sales_order_place_after>
             <sales_order_payment_pay>
                 <observers>
-                    <autoinvoice_sales_order_place_after>
+                    <autoinvoice_sales_order_payment_pay>
                         <type>singleton</type>
                         <class>Elgentos_AutoInvoice_Model_Sales_Order_Observer</class>
                         <method>salesOrderPaymentPay</method>
-                    </autoinvoice_sales_order_place_after>
+                    </autoinvoice_sales_order_payment_pay>
                 </observers>
             </sales_order_payment_pay>
         </events>
