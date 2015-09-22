@@ -1,0 +1,12 @@
+{
+    "name": "elgentos/autoinvoice",
+    "description": "Elgentos_AutoInvoice",
+    "type": "magento-module",
+    "authors": [
+        {
+            "name": "peterjaap",
+            "email": "peterjaap@elgentos.nl"
+        }
+    ],
+    "require": {}
+}
