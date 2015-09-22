@@ -17,9 +17,6 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
     }
 
     public function autoInvoice($order) {
-        if(!$order instanceof Mage_Sales_Model_Order) {
-	    $order = $observer->getOrder();
-	}
         $processConditions = unserialize(Mage::getStoreConfig('autoinvoice/general/conditions_to_process'));
 
         $state = $order->getState();
@@ -27,10 +24,12 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
         $paymentMethod = $order->getPayment()->getMethod();
 
         $canProcessInvoice = false;
-        foreach ($processConditions as $condition) {
-            if($condition['order_state'] == $state && $condition['order_status'] == $status && $condition['payment_method'] == $paymentMethod) {
-                $canProcessInvoice = true;
-                break;
+        if($processConditions && is_array($processConditions)) {
+            foreach ($processConditions as $condition) {
+                if ($condition['order_state'] == $state && $condition['order_status'] == $status && $condition['payment_method'] == $paymentMethod) {
+                    $canProcessInvoice = true;
+                    break;
+                }
             }
         }
 
