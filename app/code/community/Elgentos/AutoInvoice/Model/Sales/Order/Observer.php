@@ -18,6 +18,7 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
 
     public function autoInvoice($order) {
         $processConditions = unserialize(Mage::getStoreConfig('autoinvoice/general/conditions_to_process'));
+        $statusAfterProcessing = unserialize(Mage::getStoreConfig('autoinvoice/general/status_after_processing'));
 
         $state = $order->getState();
         $status = $order->getStatus();
@@ -29,6 +30,16 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
                 if ($condition['order_state'] == $state && $condition['order_status'] == $status && $condition['payment_method'] == $paymentMethod) {
                     $canProcessInvoice = true;
                     break;
+                }
+            }
+        }
+
+        $ultimateStatus = $ultimateState = false;
+        if($statusAfterProcessing && is_array($statusAfterProcessing)) {
+            foreach ($statusAfterProcessing as $status) {
+                if ($status['payment_method'] == $paymentMethod) {
+                    $ultimateState = $status['order_state'];
+                    $ultimateStatus = $status['order_status'];
                 }
             }
         }
@@ -75,6 +86,14 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
                 }
             } catch(Exception $e) {
                 Mage::log('Could not create invoice for ' . $order->getIncrementId() . ': ' . $e->getMessage(), null, 'elgentos_autoinvoice.log');
+            }
+
+            if($ultimateState && $ultimateStatus) {
+                try {
+                    $order->setState($ultimateState, $ultimateStatus, 'Status set to ' . $ultimateState . '/' . $ultimateStatus .' by Elgentos_AutoInvoice');
+                } catch(Exception $e) {
+                    Mage::log('Could not set state for ' . $order->getIncrementId() . ': ' . $e->getMessage(), null, 'elgentos_autoinvoice.log');
+                }
             }
         }
     }

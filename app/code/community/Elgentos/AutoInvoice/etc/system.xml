@@ -71,6 +71,17 @@
                             <show_in_store>1</show_in_store>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                         </trigger_sales_order_payment_pay>
+                        <status_after_processing>
+                            <label>State/status combination to set after processing</label>
+                            <comment>If empty, the status as dictated by the Magento workflow will be used</comment>
+                            <frontend_type>select</frontend_type>
+                            <frontend_model>autoinvoice/system_config_form_field_conditionstoprocess</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </status_after_processing>
                     </fields>
                 </general>
             </groups>
