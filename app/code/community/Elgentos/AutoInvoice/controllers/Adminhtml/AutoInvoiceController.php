@@ -1,6 +1,44 @@
 <?php
 
-class Elgentos_AutoInvoice_Adminhtml_AutoInvoiceController extends Mage_Adminhtml_Controller_Action {
+class Elgentos_AutoInvoice_Adminhtml_AutoInvoiceController extends Mage_Adminhtml_Controller_Action
+{
+    /**
+     * Mass create shipments for selected orders
+     */
+    public function massShipAction()
+    {
+        if (($cnt = $this->_actionShipOrders($this->getRequest()->getParam('email'))) !== false) {
+            Mage::getSingleton('adminhtml/session')->addSuccess(
+                Mage::helper('autoinvoice')->__('Total of %d orders were shipped', (int)$cnt)
+            );
+        } else {
+            Mage::getSingleton('adminhtml/session')->addError(
+                Mage::helper('autoinvoice')->__('Error shipping orders')
+            );
+        }
+
+        if ($this->getRequest()->getParam('print')) {
+            return $this->printShipments();
+        }
+
+        $this->_redirectReferer();
+    }
+
+    /**
+     * Create shipments for orders specified by "order_ids" param
+     *
+     * @param  boolean  $sendEmail true to send customer notification
+     * @return bool|int            number of shipments created or false
+     */
+    protected function _actionShipOrders($sendEmail = false) {
+        $ids = $this->getRequest()->getParam('order_ids');
+        try {
+            return $this->_shipOrders($ids, $sendEmail);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * Create shipments for specified orders
      *
@@ -42,7 +80,37 @@ class Elgentos_AutoInvoice_Adminhtml_AutoInvoiceController extends Mage_Adminhtm
                     if ($sendEmail) {
                         $shipment->sendEmail();
                     }
+
+                    Mage::getSingleton('adminhtml/session')->addSuccess(
+                        Mage::helper('autoinvoice')->__(
+                            'Shipment %s for order %s was created.',
+                            (int)$shipment->getIncrementId(),
+                            (int)$shipment->getOrder()->getIncrementId()
+                        )
+                    );
+
                     $ordersShipped++;
+                }
+            } else {
+                $shipments = $order->getShipmentsCollection();
+                if($shipments->getSize()) {
+                    foreach ($shipments as $shipment) {
+                        Mage::getSingleton('adminhtml/session')->addNotice(
+                            Mage::helper('autoinvoice')->__(
+                                'Could not create shipment for order %s; already has shipment (<a href="%s" target="_blank">%s</a>).',
+                                $shipment->getOrder()->getIncrementId(),
+                                Mage::helper('adminhtml')->getUrl('*/sales_order_shipment/view', array('shipment_id' => $shipment->getId())),
+                                $shipment->getIncrementId()
+                            )
+                        );
+                    }
+                } else {
+                    Mage::getSingleton('adminhtml/session')->addError(
+                        Mage::helper('autoinvoice')->__(
+                            'Could not create shipment for order %s',
+                            (int)$order->getIncrementId()
+                        )
+                    );
                 }
             }
         }
@@ -53,34 +121,9 @@ class Elgentos_AutoInvoice_Adminhtml_AutoInvoiceController extends Mage_Adminhtm
     }
 
     /**
-     * Create shipments for orders specified by "order_ids" param
-     *
-     * @param  boolean  $sendEmail true to send customer notification
-     * @return bool|int            number of shipments created or false
-     */
-    protected function _actionShipOrders($sendEmail = false) {
-        $ids = $this->getRequest()->getParam('order_ids');
-        try {
-            return $this->_shipOrders($ids, $sendEmail);
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public function massShipAction() {
-        /*if($this->getRequest()->getParam('email')) {
-            $this->massShipEmail();
-        } else {
-            $this->massShipNoEmail();
-        }*/
-
-        if($this->getRequest()->getParam('print')) {
-            $this->printShipments();
-        }
-    }
-
-    /**
      * Mass print shipments
+     * @param  array|string  $shipmentIds comma separated string or array containing shipment ID's
+     * @return bool|object      false on failure, PDF objects on success
      */
     public function printShipments($shipmentIds = null) {
         if(is_null($shipmentIds) && isset($this->_shipmentIds) && is_array($this->_shipmentIds)) {
@@ -111,42 +154,20 @@ class Elgentos_AutoInvoice_Adminhtml_AutoInvoiceController extends Mage_Adminhtm
                 $pdf->pages = array_merge ($pdf->pages, $pages->pages);
             }
 
+            foreach($shipments as $shipment) {
+                Mage::getSingleton('adminhtml/session')->addSuccess(
+                    Mage::helper('autoinvoice')->__(
+                        'Shipment %s for order %s was printed.',
+                        (int)$shipment->getIncrementId(),
+                        (int)$shipment->getOrder()->getIncrementId()
+                    )
+                );
+            }
+
             return $this->_prepareDownloadResponse('packingslip'.Mage::getSingleton('core/date')->date('Y-m-d_H-i-s').'.pdf', $pdf->render(), 'application/pdf');
         } else {
             return false;
         }
-    }
-
-    /**
-     * Mass shipment action (no emails)
-     */
-    public function massShipNoEmail() {
-        if (($cnt = $this->_actionShipOrders()) !== false) {
-            Mage::getSingleton('adminhtml/session')->addSuccess(
-                Mage::helper('autoinvoice')->__('Total of %d orders were shipped', (int) $cnt)
-            );
-        } else {
-            Mage::getSingleton('adminhtml/session')->addError(
-                Mage::helper('autoinvoice')->__('Error shipping orders')
-            );
-        }
-        $this->_redirect('adminhtml/sales_order/index');
-    }
-
-    /**
-     * Mass shipment action (with emails)
-     */
-    public function massShipEmail() {
-        if (($cnt = $this->_actionShipOrders(true)) !== false) {
-            Mage::getSingleton('adminhtml/session')->addSuccess(
-                Mage::helper('autoinvoice')->__('Total of %d orders were shipped (emails sent)', (int) $cnt)
-            );
-        } else {
-            Mage::getSingleton('adminhtml/session')->addError(
-                Mage::helper('autoinvoice')->__('Error shipping orders')
-            );
-        }
-        $this->_redirect('adminhtml/sales_order/index');
     }
 
     protected function _isAllowed()

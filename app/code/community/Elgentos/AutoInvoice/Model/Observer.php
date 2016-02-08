@@ -15,28 +15,34 @@ class Elgentos_AutoInvoice_Model_Observer {
         ) {
             $helper = Mage::helper('autoinvoice');
 
-            $block->addItem('autoinvoice_massshipment_no_emails_no_ship', array(
-                'label'   => $helper->__('Ship (no emails)'),
-                'url'     => Mage::helper('adminhtml')->getUrl('adminhtml/autoinvoice/massShip', array('email' => false, 'print' => false)),
+            $block->addItem('autoinvoice_massshipment', array(
+                'label'   => $helper->__('Create shipments'),
+                'url'     => Mage::helper('adminhtml')->getUrl('adminhtml/autoinvoice/massShip'),
                 'confirm' => $helper->__('Are you sure?'),
-            ));
-
-            $block->addItem('autoinvoice_massshipment_with_emails_no_ship', array(
-                'label'   => $helper->__('Ship (with emails)'),
-                'url'     => Mage::helper('adminhtml')->getUrl('adminhtml/autoinvoice/massShip', array('email' => true, 'print' => false)),
-                'confirm' => $helper->__('Are you sure?'),
-            ));
-
-            $block->addItem('autoinvoice_massshipment_no_emails', array(
-                'label'   => $helper->__('Ship & print (no emails)'),
-                'url'     => Mage::helper('adminhtml')->getUrl('adminhtml/autoinvoice/massShip', array('email' => false, 'print' => true)),
-                'confirm' => $helper->__('Are you sure?'),
-            ));
-
-            $block->addItem('autoinvoice_massshipment_with_emails', array(
-                'label'   => $helper->__('Ship & print (with emails)'),
-                'url'     => Mage::helper('adminhtml')->getUrl('adminhtml/autoinvoice/massShip', array('email' => true, 'print' => true)),
-                'confirm' => $helper->__('Are you sure?'),
+                'additional' => array(
+                    'email' => array(
+                        'name' => 'email',
+                        'type' => 'select',
+                        'class' => 'required-entry',
+                        'label' => $helper->__('Send email to customer?'),
+                        'values' => array(
+                            0 => $helper->__('No'),
+                            1 => $helper->__('Yes'),
+                        ),
+                        'value' => 1
+                    ),
+                    'print' => array(
+                        'name' => 'print',
+                        'type' => 'select',
+                        'class' => 'required-entry',
+                        'label' => $helper->__('Print shipments automatically?'),
+                        'values' => array(
+                            0 => $helper->__('No'),
+                            1 => $helper->__('Yes')
+                        ),
+                        'value' => 1
+                    )
+                )
             ));
         }
     }
