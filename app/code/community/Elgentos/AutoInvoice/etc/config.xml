@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Elgentos_AutoInvoice>
-            <version>0.1.3</version>
+            <version>0.1.4</version>
         </Elgentos_AutoInvoice>
     </modules>
     <global>
@@ -46,6 +46,17 @@
             </sales_order_payment_pay>
         </events>
     </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <autoinvoice before="Mage_Adminhtml">Elgentos_AutoInvoice_Adminhtml</autoinvoice>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <adminhtml>
         <acl>
             <resources>
@@ -74,6 +85,16 @@
                 </admin>
             </resources>
         </acl>
+        <events>
+            <core_block_abstract_prepare_layout_before>
+                <observers>
+                    <elgentos_autoinvoice_core_block_abstract_prepare_layout_before>
+                        <class>autoinvoice/observer</class>
+                        <method>addMassActionShipment</method>
+                    </elgentos_autoinvoice_core_block_abstract_prepare_layout_before>
+                </observers>
+            </core_block_abstract_prepare_layout_before>
+        </events>
     </adminhtml>
     <default>
         <autoinvoice>
