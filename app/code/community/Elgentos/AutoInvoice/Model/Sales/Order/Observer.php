@@ -10,7 +10,6 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
     }
 
     public function salesOrderPaymentPay($observer) {
-        if(Mage::registry('order_processing')) return;
         $order = $observer->getPayment()->getOrder();
         if(Mage::getStoreConfig('autoinvoice/general/trigger_sales_order_payment_pay', $order->getStoreId())) {
                $this->autoInvoice($order);
@@ -18,6 +17,7 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
     }
 
     public function autoInvoice($order) {
+        if(Mage::registry('order_processing')) return;
         $processConditions = unserialize(Mage::getStoreConfig('autoinvoice/general/conditions_to_process'));
         $statusAfterProcessing = unserialize(Mage::getStoreConfig('autoinvoice/general/status_after_processing'));
 
@@ -46,9 +46,9 @@ class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
         }
 
         if ($canProcessInvoice) {
+            Mage::register('order_processing', true);
             try {
-                if($order->canInvoice() && Mage::getStoreConfig('autoinvoice/general/auto_invoice', $order->getStoreId()) && !Mage::registry('order_processing')) {
-                    Mage::register('order_processing', true);
+                if($order->canInvoice() && Mage::getStoreConfig('autoinvoice/general/auto_invoice', $order->getStoreId())) {
                     $invoice = Mage::getModel('sales/service_order', $order)->prepareInvoice();
                     $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_OFFLINE);
                     $invoice->register();
