@@ -1,6 +1,6 @@
 <?php
 
-class Elgentos_AutoInvoice_Adminhtml_AutoInvoiceController extends Mage_Adminhtml_Controller_Action
+class Elgentos_AutoInvoice_Adminhtml_AutoinvoiceController extends Mage_Adminhtml_Controller_Action
 {
     /**
      * Mass create shipments for selected orders
