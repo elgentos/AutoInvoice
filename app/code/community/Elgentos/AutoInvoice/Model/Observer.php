@@ -29,7 +29,7 @@ class Elgentos_AutoInvoice_Model_Observer {
                             0 => $helper->__('No'),
                             1 => $helper->__('Yes'),
                         ),
-                        'value' => 1
+                        'value' => 0
                     ),
                     'print' => array(
                         'name' => 'print',

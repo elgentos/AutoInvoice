@@ -17,7 +17,7 @@ class Elgentos_AutoInvoice_Adminhtml_AutoInvoiceController extends Mage_Adminhtm
             );
         }
 
-        if ($this->getRequest()->getParam('print')) {
+        if ($this->getRequest()->getParam('print') && $cnt > 0) {
             return $this->printShipments();
         }
 
