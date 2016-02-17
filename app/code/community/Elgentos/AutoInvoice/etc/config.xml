@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Elgentos_AutoInvoice>
-            <version>0.1.7</version>
+            <version>0.1.8</version>
         </Elgentos_AutoInvoice>
     </modules>
     <global>
@@ -26,6 +26,15 @@
             </autoinvoice>
         </helpers>
         <events>
+            <sales_order_save_after>
+                <observers>
+                    <autoinvoice_sales_order_save_after>
+                        <type>singleton</type>
+                        <class>Elgentos_AutoInvoice_Model_Sales_Order_Observer</class>
+                        <method>salesOrderSavefter</method>
+                    </autoinvoice_sales_order_save_after>
+                </observers>
+            </sales_order_save_after>
             <sales_order_place_after>
                 <observers>
                     <autoinvoice_sales_order_place_after>

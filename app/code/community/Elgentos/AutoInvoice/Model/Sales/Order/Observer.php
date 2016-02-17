@@ -2,6 +2,13 @@
 
 class Elgentos_AutoInvoice_Model_Sales_Order_Observer {
 
+    public function salesOrderSaveAfter($observer) {
+        $order = $observer->getOrder();
+        if(Mage::getStoreConfig('autoinvoice/general/trigger_sales_order_save_after', $order->getStoreId())) {
+            $this->autoInvoice($order);
+        }
+    }
+
     public function salesOrderPlaceAfter($observer) {
         $order = $observer->getOrder();
         if(Mage::getStoreConfig('autoinvoice/general/trigger_sales_order_place_after', $order->getStoreId())) {
