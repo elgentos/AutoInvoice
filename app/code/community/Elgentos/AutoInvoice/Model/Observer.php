@@ -1,12 +1,14 @@
 <?php
 
-class Elgentos_AutoInvoice_Model_Observer {
+class Elgentos_AutoInvoice_Model_Observer
+{
     /**
      * Add new mass actions to Orders grid
      *
      * @param Varien_Event_Observer $observer
      */
-    public function addMassActionShipment(Varien_Event_Observer $observer) {
+    public function addMassActionShipment(Varien_Event_Observer $observer)
+    {
         $block = $observer->getEvent()->getBlock();
 
         if (
@@ -16,8 +18,8 @@ class Elgentos_AutoInvoice_Model_Observer {
             $helper = Mage::helper('autoinvoice');
 
             $block->addItem('autoinvoice_massshipment', array(
-                'label'   => $helper->__('Create shipments'),
-                'url'     => Mage::helper('adminhtml')->getUrl('adminhtml/autoinvoice/massShip'),
+                'label' => $helper->__('Create shipments'),
+                'url' => Mage::helper('adminhtml')->getUrl('adminhtml/autoinvoice/massShip'),
                 'confirm' => $helper->__('Are you sure?'),
                 'additional' => array(
                     'email' => array(

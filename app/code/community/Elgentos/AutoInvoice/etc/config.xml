@@ -2,18 +2,14 @@
 <config>
     <modules>
         <Elgentos_AutoInvoice>
-            <version>0.1.8.3</version>
+            <version>0.2.0</version>
         </Elgentos_AutoInvoice>
     </modules>
     <global>
         <models>
             <autoinvoice>
                 <class>Elgentos_AutoInvoice_Model</class>
-                <resourceModel>elgentos_alpak_resource</resourceModel>
             </autoinvoice>
-            <autoinvoice_resource>
-                <class>Elgentos_AutoInvoice_Model_Resource</class>
-            </autoinvoice_resource>
         </models>
         <blocks>
             <autoinvoice>

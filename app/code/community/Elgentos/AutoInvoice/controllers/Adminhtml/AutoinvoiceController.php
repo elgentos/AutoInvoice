@@ -27,10 +27,11 @@ class Elgentos_AutoInvoice_Adminhtml_AutoinvoiceController extends Mage_Adminhtm
     /**
      * Create shipments for orders specified by "order_ids" param
      *
-     * @param  boolean  $sendEmail true to send customer notification
+     * @param  boolean $sendEmail true to send customer notification
      * @return bool|int            number of shipments created or false
      */
-    protected function _actionShipOrders($sendEmail = false) {
+    protected function _actionShipOrders($sendEmail = false)
+    {
         $ids = $this->getRequest()->getParam('order_ids');
         try {
             return $this->_shipOrders($ids, $sendEmail);
@@ -42,12 +43,13 @@ class Elgentos_AutoInvoice_Adminhtml_AutoinvoiceController extends Mage_Adminhtm
     /**
      * Create shipments for specified orders
      *
-     * @param  array $orderIds  order IDs (array of integers)
-     * @param  bool  $sendEmail true to send customer notification
+     * @param  array $orderIds order IDs (array of integers)
+     * @param  bool $sendEmail true to send customer notification
      * @return int              number of shipments created
      */
-    protected function _shipOrders($orderIds, $sendEmail) {
-        if(!isset($this->_shipmentIds)) {
+    protected function _shipOrders($orderIds, $sendEmail)
+    {
+        if (!isset($this->_shipmentIds)) {
             $this->_shipmentIds = array();
         }
         $shipmentIds = $this->_shipmentIds;
@@ -93,7 +95,7 @@ class Elgentos_AutoInvoice_Adminhtml_AutoinvoiceController extends Mage_Adminhtm
                 }
             } else {
                 $shipments = $order->getShipmentsCollection();
-                if($shipments->getSize()) {
+                if ($shipments->getSize()) {
                     foreach ($shipments as $shipment) {
                         Mage::getSingleton('adminhtml/session')->addNotice(
                             Mage::helper('autoinvoice')->__(
@@ -122,15 +124,16 @@ class Elgentos_AutoInvoice_Adminhtml_AutoinvoiceController extends Mage_Adminhtm
 
     /**
      * Mass print shipments
-     * @param  array|string  $shipmentIds comma separated string or array containing shipment ID's
+     * @param  array|string $shipmentIds comma separated string or array containing shipment ID's
      * @return bool|object      false on failure, PDF objects on success
      */
-    public function printShipments($shipmentIds = null) {
-        if(is_null($shipmentIds) && isset($this->_shipmentIds) && is_array($this->_shipmentIds)) {
+    public function printShipments($shipmentIds = null)
+    {
+        if (is_null($shipmentIds) && isset($this->_shipmentIds) && is_array($this->_shipmentIds)) {
             $shipmentIds = $this->_shipmentIds;
-        } elseif(is_string($shipmentIds) && stripos($shipmentIds, ',') !== false) {
+        } elseif (is_string($shipmentIds) && stripos($shipmentIds, ',') !== false) {
             $shipmentIds = array_map('trim', explode(',', $shipmentIds));
-        } elseif($this->getRequest()->getParam('order_ids')) {
+        } elseif ($this->getRequest()->getParam('order_ids')) {
             $orderIds = $this->getRequest()->getParam('order_ids');
         }
 
@@ -146,15 +149,15 @@ class Elgentos_AutoInvoice_Adminhtml_AutoinvoiceController extends Mage_Adminhtm
                 ->load();
         }
 
-        if(isset($shipments)) {
-            if (!isset($pdf)){
+        if (isset($shipments)) {
+            if (!isset($pdf)) {
                 $pdf = Mage::getModel('sales/order_pdf_shipment')->getPdf($shipments);
             } else {
                 $pages = Mage::getModel('sales/order_pdf_shipment')->getPdf($shipments);
-                $pdf->pages = array_merge ($pdf->pages, $pages->pages);
+                $pdf->pages = array_merge($pdf->pages, $pages->pages);
             }
 
-            foreach($shipments as $shipment) {
+            foreach ($shipments as $shipment) {
                 Mage::getSingleton('adminhtml/session')->addSuccess(
                     Mage::helper('autoinvoice')->__(
                         'Shipment %s for order %s was printed.',
@@ -164,7 +167,7 @@ class Elgentos_AutoInvoice_Adminhtml_AutoinvoiceController extends Mage_Adminhtm
                 );
             }
 
-            return $this->_prepareDownloadResponse('packingslip'.Mage::getSingleton('core/date')->date('Y-m-d_H-i-s').'.pdf', $pdf->render(), 'application/pdf');
+            return $this->_prepareDownloadResponse('packingslip' . Mage::getSingleton('core/date')->date('Y-m-d_H-i-s') . '.pdf', $pdf->render(), 'application/pdf');
         } else {
             return false;
         }
