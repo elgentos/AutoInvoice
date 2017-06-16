@@ -2,5 +2,5 @@
 
 Adds a configurable condition block to the backend. All orders that comply to the combination of state, status and payment method will be automatically invoiced.
 
-![screenshot 2014-10-09 11 56 10](https://cloud.githubusercontent.com/assets/431360/4574184/4744720a-4f9a-11e4-89e1-4088866ddd21.png)
+![image](https://user-images.githubusercontent.com/431360/27226026-43faf750-529d-11e7-810d-e6319d6c5098.png)
 
